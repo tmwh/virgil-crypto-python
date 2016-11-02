@@ -3,4 +3,5 @@
 *.egg-info
 *.pyc
 _build/
+wheelhouse/
 virgil_crypto/*virgil_crypto_python*
