@@ -7,20 +7,32 @@ matrix:
       services:
         - docker
       env: DOCKER_IMAGE=tmwh/virgil-manylinux1_x86_64
-           TEST_SCRIPT=ci/test-manylinux.sh
+           INSTALL_SCRIPT=ci/manylinux/install.sh
+           TEST_SCRIPT=ci/manylinux/test.sh
+
     - sudo: required
       services:
         - docker
       env: DOCKER_IMAGE=tmwh/virgil-manylinux1_i686
            PRE_CMD=linux32
-           TEST_SCRIPT=ci/test-manylinux.sh
+           INSTALL_SCRIPT=ci/manylinux/install.sh
+           TEST_SCRIPT=ci/manylinux/test.sh
+
+    #- os: osx
+    #- language: generic
+    #- env: TOXENV=py32
+
+    #- os: osx
+    #- language: generic
+    #- env: TOXENV=py33
+
 
 before_install:
   - sed -i 's/git@github.com:/https:\/\/github.com\//' .gitmodules
   - git submodule update --init --recursive
 
 install:
-  - docker pull $DOCKER_IMAGE
+  - /bin/bash $INSTALL_SCRIPT
 
 script:
   - /bin/bash $TEST_SCRIPT
