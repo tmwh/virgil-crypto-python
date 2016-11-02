@@ -23,6 +23,6 @@ install:
   - docker pull $DOCKER_IMAGE
 
 script:
-  - $TEST_SCRIPT
+  - /bin/bash $TEST_SCRIPT
   - ls wheelhouse/
 
