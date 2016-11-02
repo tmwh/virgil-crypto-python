@@ -1,0 +1,21 @@
+matrix:
+  include:
+    - sudo: required
+      services:
+        - docker
+      env: DOCKER_IMAGE=tmwh/virgil-manylinux1_x86_64
+           TEST_SCRIPT=ci/test-manylinux.sh
+    - sudo: required
+      services:
+        - docker
+      env: DOCKER_IMAGE=tmwh/virgil-manylinux1_i686
+           PRE_CMD=linux32
+           TEST_SCRIPT=ci/test-manylinux.sh
+
+install:
+  - docker pull $DOCKER_IMAGE
+
+script:
+  - $TEST_SCRIPT
+  - ls wheelhouse/
+
