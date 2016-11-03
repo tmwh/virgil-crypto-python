@@ -1,8 +1,6 @@
 #!/bin/bash
 set -e -x
 
-pip install twine
+pip install twine --user --ignore-installed
 
-twine upload -r pypitest wheelhouse/* \
-      --skip-existing --config-file ./.pypirc \
-      -u $PYPI_USERNAME -p $PYPI_PASSWORD
+twine upload wheelhouse/* --skip-existing -u $PYPI_USERNAME -p $PYPI_PASSWORD

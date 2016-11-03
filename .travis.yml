@@ -19,6 +19,7 @@ matrix:
            INSTALL_SCRIPT_PATH=./ci/manylinux/install.sh
            RUN_SCRIPT_PATH=./ci/manylinux/run.sh
            DEPLOY_SCRIPT_PATH=./ci/manylinux/deploy.sh
+           BUILD_SOURCE_PACKAGE=true
     - os: linux
       sudo: required
       services:

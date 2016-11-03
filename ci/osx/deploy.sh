@@ -8,6 +8,4 @@ eval "$(pyenv init -)"
 pip install twine
 pyenv rehash
 
-twine upload -r pypitest wheelhouse/* \
-      --skip-existing --config-file ./.pypirc \
-      -u $PYPI_USERNAME -p $PYPI_PASSWORD
+twine upload wheelhouse/* --skip-existing -u $PYPI_USERNAME -p $PYPI_PASSWORD
