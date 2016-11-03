@@ -18,6 +18,7 @@ for VERSION in $PYTHON_VERSIONS; do
   export PYENV_VERSION=$VERSION
 
   pyenv install $PYENV_VERSION
+  pyenv global $PYENV_VERSION
   pyenv rehash
   pip install --upgrade pip
   pip install wheel

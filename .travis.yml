@@ -1,14 +1,14 @@
 git:
   submodules: false
-
 language: generic
-
 env:
   global:
     - INSTALL_SCRIPT_PATH=./ci/osx/install.sh
     - RUN_SCRIPT_PATH=./ci/osx/run.sh
+    - DEPLOY_SCRIPT_PATH=./ci/osx/deploy.sh
     - PYTHON_VERSIONS="2.7.12 3.3.6 3.4.5 3.5.2"
-
+    - secure: LRM2JRV6QydXcGIiEVkONox0CyxLg+vpRp9xIRa/efFU8NyLkF7zSAa/BuaNRtlWNppkOqGM7uuXJfLhe5Wn0jS6C9LP/mht4uAouFs4GfNIIb1Ah3SHd8PSODL/UvrL8mwx5F63UHbWjdav65SpBjGHshGNd+f0HeF4g0ZotCGvdb6ZPAG3GiL8VbbnTJzeLqrvrZElxtfXdBgkV60k+JeUYeTo/N9gUm9WUmvkOdbmqeH+J3qHCP6KuD/aL5XGz+c51cM1ObPqioAidDAlHslDr24VfvBwzfBv7+Tu5CfDUbMhb9an0xmclcZDquwWf8mbLGVXM0jLPZkTcmee1ztibk8vzYW+/t9IqCmQ8W40krDMTY3iC1Y6FMUNinALP0UlOxrJ84kZQgNnbeXxutDdOEF2W50WUaL5v79mlFjPaRPxhOnc7wB2scbGhdeeg43g4KLortNUQWsRlnS2O6OXM9lO5nJISb7FnrqGv/ol2igI6+wkDMkMvhDi200WrkY4AgCqoeyghEhdteaznY8FQyKJVsCjlGmehOzojJhalWfq9iwGSc8awR4JMCGbnEoOcLOBhUQNq+2t9CwzosDY+mHpe7YrTR1c3VCX9QlAWJSuhHrVZsJUiS9/0OLug8HrSBpWcOeKVl2q4TYkKf8NGGgSnPRp5cQAbLi3dpE=
+    - secure: ABrtKWPCjlyoqLgh6LfDyGvYCAtpygHuwMOPBZ4L9dd+SxBMVS+YNfsKLmQx9VHfRGKqqJufYEbrUjwaqD4FvAjeyW2dlAW+oRVxA/twjjOuk9sdun/s3A7tOY/cp3ZeJaJQavfGiulc86u5EBB+pWFsT1SmLEW8efwY4MqvE9780NNSipZI/km41XnHN5sM2NOm4tms+KEq97vY6+t4Pp2SqkdXUS+q/++r2N/EFzswlA+ftKtLAW+2eG/ixoW7j4YaBLL/yd6EviNBeRsxLtL9RO2EJ8PJlysIEb1EnleXEkI+iehfKA3fQMdRsSmIALBczixrJxB4lsXRTK0KR/1kclik3v0T15QjThA8Zz94wKRiaUt6Kw1ZsW02g5SAoA4sbz2yN8Qu0ywfn2FVz5oJEyvrOCqQgEC1ZpRMG2UyQt4i5APQtphADhgPVnjnoMNY20uQk/vUL+H5z2BeNvYxmkZCvdVsPBDF6Wv/TmWlnSzIJF204ErXfyelJ9WJOjs37vsiio7bq5thkZZaZx5S1ny6Tvm4m7JSjLl4ZGiNt+6RNB4yUOMnbU0vnJC5YrijliIRRDFFuYfKntBI0t+lmTkBWTNHczId/rFLmI8aYu7TH2xncR/q7I7Zy1aQtTKVHayxbOHM8dP990L3sL14dBRytn6+uHvUh3Fuf4c=
 matrix:
   include:
     - os: linux
@@ -16,33 +16,35 @@ matrix:
       services:
         - docker
       env: DOCKER_IMAGE=tmwh/virgil-manylinux1_x86_64
-           INSTALL_SCRIPT_PATH=ci/manylinux/install.sh
-           RUN_SCRIPT_PATH=ci/manylinux/run.sh
-
+           INSTALL_SCRIPT_PATH=./ci/manylinux/install.sh
+           RUN_SCRIPT_PATH=./ci/manylinux/run.sh
+           DEPLOY_SCRIPT_PATH=./ci/manylinux/deploy.sh
     - os: linux
       sudo: required
       services:
         - docker
       env: DOCKER_IMAGE=tmwh/virgil-manylinux1_i686
            PRE_CMD=linux32
-           INSTALL_SCRIPT_PATH=ci/manylinux/install.sh
-           RUN_SCRIPT_PATH=ci/manylinux/run.sh
+           INSTALL_SCRIPT_PATH=./ci/manylinux/install.sh
+           RUN_SCRIPT_PATH=./ci/manylinux/run.sh
+           DEPLOY_SCRIPT_PATH=./ci/manylinux/deploy.sh
 
-    # Building matrix manually because osx_image can't be used for matrix
     - osx_image: xcode6.4
       os: osx
     - osx_image: xcode7.3
       os: osx
     - osx_image: xcode8
       os: osx
-
 before_install:
   - git submodule update --init --recursive
-
 install:
-  - $INSTALL_SCRIPT_PATH
-
+  - /bin/bash $INSTALL_SCRIPT_PATH
 script:
-  - $RUN_SCRIPT_PATH
+  - /bin/bash $RUN_SCRIPT_PATH
   - ls wheelhouse/
-
+deploy:
+  provider: script
+  script: /bin/bash $DEPLOY_SCRIPT_PATH
+  skip_cleanup: true
+  on:
+    tags: true
